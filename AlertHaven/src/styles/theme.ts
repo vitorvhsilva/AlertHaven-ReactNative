@@ -1,12 +1,11 @@
 export default {
   colors: {
-    verdeClaro1: '#00B131',
-    verdeClaro2: '#D8EBDD',
-    verdeEscuro1: '#006C1E',
-    verdeEscuro2: '#003910',
+    roxo1: '#AAA4F2',
+    roxo2: '#130E4A',
     preto: '#070707',
     branco: '#FFFFFF',
     cinza: '#D9D9D9',
+    verde: '##5AED83',
     vermelho: '#8C1D18'
   },
   fonts: {
