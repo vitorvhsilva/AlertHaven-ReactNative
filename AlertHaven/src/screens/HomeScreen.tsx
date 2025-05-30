@@ -185,7 +185,7 @@ const Filter = styled.TouchableOpacity`
   min-width: 100px;
   background-color: ${theme.colors.roxo1};
   border-radius: 20px;
-  padding: 5px;
+  padding: 5px 10px;
   margin: 0px 5px;
 `
 

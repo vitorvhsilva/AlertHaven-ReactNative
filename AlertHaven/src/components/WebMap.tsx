@@ -24,14 +24,6 @@ interface WebMapProps {
   userLocation?: LatLngExpression | null;
 }
 
-import alagamentoIcon from '../../assets/icons/alagamento.png';
-import tempestadeIcon from '../../assets/icons/chuva.png';
-import tornadoIcon from '../../assets/icons/tornado.png';
-import calorIcon from '../../assets/icons/onda_calor.png';
-import terremotoIcon from '../../assets/icons/terremoto.png';
-import usuarioIcon from '../../assets/icons/usuario.png';
-import abrigoIcon from '../../assets/icons/abrigo.png';
-
 export type MarkerType = 
   | 'ALAGAMENTO' 
   | 'TEMPESTADE' 
@@ -42,15 +34,14 @@ export type MarkerType =
   | 'ABRIGO';
 
 const ICON_URLS = {
-  ALAGAMENTO: alagamentoIcon,
-  TEMPESTADE: tempestadeIcon,
-  TORNADO: tornadoIcon,
-  ONDA_DE_CALOR: calorIcon,
-  TERREMOTO: terremotoIcon,
-  USUARIO: usuarioIcon,
-  ABRIGO: abrigoIcon
+  ALAGAMENTO: 'https://raw.githubusercontent.com/vitorvhsilva/AlertHaven-ReactNative/main/AlertHaven/assets/icons/alagamento.png',
+  TEMPESTADE: 'https://raw.githubusercontent.com/vitorvhsilva/AlertHaven-ReactNative/main/AlertHaven/assets/icons/chuva.png',
+  TORNADO: 'https://raw.githubusercontent.com/vitorvhsilva/AlertHaven-ReactNative/main/AlertHaven/assets/icons/tornado.png',
+  ONDA_DE_CALOR: 'https://raw.githubusercontent.com/vitorvhsilva/AlertHaven-ReactNative/main/AlertHaven/assets/icons/onda_calor.png',
+  TERREMOTO: 'https://raw.githubusercontent.com/vitorvhsilva/AlertHaven-ReactNative/main/AlertHaven/assets/icons/terremoto.png',
+  USUARIO: 'https://raw.githubusercontent.com/vitorvhsilva/AlertHaven-ReactNative/main/AlertHaven/assets/icons/usuario.png',
+  ABRIGO: 'https://raw.githubusercontent.com/vitorvhsilva/AlertHaven-ReactNative/main/AlertHaven/assets/icons/abrigo.png'
 };
-
 
 const WebMap: React.FC<WebMapProps> = ({ 
   center = [-23.5505, -46.6333], 
@@ -66,14 +57,24 @@ const WebMap: React.FC<WebMapProps> = ({
       attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
+    // Corrige o problema do ícone padrão do Leaflet
+    const defaultIcon = L.icon({
+      iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
+      iconRetinaUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon-2x.png',
+      shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
+      iconSize: [25, 41],
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34]
+    });
+
     const createCustomIcon = (type: MarkerType) => {
-      const iconSize: L.PointTuple = type === 'USUARIO' ? [32, 32] : [40, 40];
+      const iconSize: [number, number] = type === 'USUARIO' ? [32, 32] : [40, 40];
       
       return L.icon({
         iconUrl: ICON_URLS[type],
         iconSize: iconSize,
-        iconAnchor: [iconSize[0]/2, iconSize[1]] as L.PointTuple,
-        popupAnchor: [0, -iconSize[1]/2] as L.PointTuple
+        iconAnchor: [iconSize[0]/2, iconSize[1]],
+        popupAnchor: [0, -iconSize[1]/2]
       });
     };
 
