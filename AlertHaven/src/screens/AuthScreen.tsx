@@ -1,4 +1,3 @@
-// src/screens/AuthScreen.tsx
 import styled from 'styled-components/native';
 import theme from '../styles/theme';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -12,7 +11,7 @@ type AuthScreenProps = {
 const AuthScreen: React.FC<AuthScreenProps> = ({ navigation }) => {
   return (
     <Container>
-      <WebMap />
+
     </Container>
   );
 };

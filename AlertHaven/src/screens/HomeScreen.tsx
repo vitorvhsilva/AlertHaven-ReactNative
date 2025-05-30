@@ -1,23 +1,87 @@
-// src/screens/AuthScreen.tsx
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components/native';
 import theme from '../styles/theme';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/navigation';
-import WebMap from '../components/WebMap';
+import WebMap, { MarkerType } from '../components/WebMap';
 
 type HomeScreenProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Home'>;
 };
 
 export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
+  const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
+
+  useEffect(() => {
+    setUserLocation([-23.5615, -46.6560]);
+  }, []);
+
+  const circles = [
+    {
+      center: [-23.5505, -46.6333] as [number, number], 
+      radius: 500,
+      color: theme.colors.intensidade_alta,
+      fillColor: theme.colors.intensidade_alta,
+      fillOpacity: 0.2,
+      popupText: 'Alagamento grave - Evitar área'
+    },
+    {
+      center: [-23.5815, -46.6360] as [number, number], 
+      radius: 400,
+      color: theme.colors.intensidade_media,
+      fillColor: theme.colors.intensidade_media,
+      fillOpacity: 0.2,
+      popupText: 'Tempestade moderada - Cuidado'
+    },
+    {
+      center: [-23.5415, -46.6760] as [number, number], 
+      radius: 600,
+      color: theme.colors.intensidade_alta,
+      fillColor: theme.colors.intensidade_alta,
+      fillOpacity: 0.2,
+      popupText: 'Alerta de tornado - Área de risco'
+    },
+    {
+      center: [-23.5215, -46.6260] as [number, number], 
+      radius: 300,
+      color: theme.colors.intensidade_fraca,
+      fillColor: theme.colors.intensidade_fraca,
+      fillOpacity: 0.2,
+      popupText: 'Onda de calor - Hidrate-se'
+    },
+    {
+      center: [-23.5915, -46.6860] as [number, number], 
+      radius: 450,
+      color: theme.colors.intensidade_media,
+      fillColor: theme.colors.intensidade_media,
+      fillOpacity: 0.2,
+      popupText: 'Terremoto moderado - Danos leves'
+    },
+    {
+      center: [-23.5115, -46.6160] as [number, number], 
+      radius: 350,
+      color: theme.colors.intensidade_fraca,
+      fillColor: theme.colors.intensidade_fraca,
+      fillOpacity: 0.2,
+      popupText: 'Alagamento leve - Trânsito lento'
+    }
+  ];
+
+  const markers = circles.map((circle, index) => {
+    const types: MarkerType[] = ['ALAGAMENTO', 'TEMPESTADE', 'TORNADO', 'ONDA_DE_CALOR', 'TERREMOTO'];
+    return {
+      position: circle.center,
+      type: types[index % types.length], 
+      popupText: circle.popupText
+    };
+  });
+
   return (
     <Container>
-      <Header>
-
-      </Header>
+      <Header></Header>
       <HomeTextContainer>
         <HomeTitleText>Seja bem vindo, Vitor</HomeTitleText>
-        <HomeSubtitleText>Veja nosso mapa em tempo real de eventos climáticos</HomeSubtitleText>
+        <HomeSubtitleText>Eventos climáticos em tempo real - São Paulo</HomeSubtitleText>
       </HomeTextContainer>
       <FilterContainer>
         <FilterTitleText>Filtrar por:</FilterTitleText>
@@ -30,27 +94,30 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
           }}
         >
           <Filter>
-            <FilterText>Abrigos</FilterText>
+            <FilterText>Alagamentos</FilterText>
           </Filter>
           <Filter>
-            <FilterText>Abrigos</FilterText>
+            <FilterText>Tempestades</FilterText>
           </Filter>
           <Filter>
-            <FilterText>Abrigos</FilterText>
+            <FilterText>Tornados</FilterText>
           </Filter>
           <Filter>
-            <FilterText>Abrigos</FilterText>
+            <FilterText>Calor</FilterText>
           </Filter>
           <Filter>
-            <FilterText>Abrigos</FilterText>
-          </Filter>
-          <Filter>
-            <FilterText>Abrigos</FilterText>
+            <FilterText>Terremotos</FilterText>
           </Filter>
         </FiltersContainer>
       </FilterContainer>
       <MapContainer>
-        <WebMap />
+        <WebMap 
+          center={[-23.5615, -46.6560]} 
+          zoom={13}
+          circles={circles}
+          markers={markers}
+          userLocation={userLocation}
+        />
       </MapContainer>
     </Container>
   );
@@ -115,7 +182,7 @@ const FilterTitleText = styled.Text`
 `;
 
 const Filter = styled.TouchableOpacity`
-  width: 100px;
+  min-width: 100px;
   background-color: ${theme.colors.roxo1};
   border-radius: 20px;
   padding: 5px;

@@ -6,7 +6,10 @@ export default {
     branco: '#FFFFFF',
     cinza: '#D9D9D9',
     verde: '##5AED83',
-    vermelho: '#8C1D18'
+    vermelho: '#8C1D18',
+    intensidade_fraca: '#AAA4F2',
+    intensidade_media: '#130E4A',
+    intensidade_alta: '#070707',
   },
   fonts: {
     regular: 'Poppins_400Regular',
