@@ -5,11 +5,11 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/navigation';
 import WebMap from '../components/WebMap';
 
-type HomeScreenProps = {
+type AuthScreenProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Auth'>;
 };
 
-const AuthScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
+const AuthScreen: React.FC<AuthScreenProps> = ({ navigation }) => {
   return (
     <Container>
       <WebMap />

@@ -4,6 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { RootStackParamList } from '../types/navigation';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AuthScreen from '../screens/AuthScreen';
+import { HomeScreen } from '../screens/HomeScreen';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -18,7 +19,7 @@ export const AppRoutes: React.FC = () => {
     <NavigationContainer>
       <Stack.Navigator
         initialRouteName={//user ? 'Home' : 
-        'Auth'
+        'Home'
           }
         screenOptions={{
           headerShown: false,
@@ -28,6 +29,7 @@ export const AppRoutes: React.FC = () => {
         {!user ? (
           <>
             <Stack.Screen name="Auth" component={AuthScreen} />
+            <Stack.Screen name="Home" component={HomeScreen} />
           </>
           /*
           <>

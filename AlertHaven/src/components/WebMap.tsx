@@ -33,7 +33,7 @@ const WebMap = () => {
 
   }, []);
 
-  return <div id="map" style={{ width: '100%', height: '100vh' }} />;
+  return <div id="map" style={{ width: '100%', height: '60vh', borderRadius: '20px' }} />;
 };
 
 export default WebMap;
