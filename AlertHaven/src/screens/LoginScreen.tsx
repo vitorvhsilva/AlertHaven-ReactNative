@@ -119,7 +119,6 @@ const BackContainer = styled.TouchableOpacity`
 const BackImage = styled.Image`
   width: 100%;
   height: 100%;
-  tint-color: ${theme.colors.roxo1};
 `;
 
 const HeaderTitle = styled.Text`

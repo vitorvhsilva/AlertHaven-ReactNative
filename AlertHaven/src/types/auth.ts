@@ -6,6 +6,7 @@ export type Usuario = {
     email: string;
     senha: string;
     dataNascimento: string;
+    dataCriacao: string;
 }
 
 export type AuthResponse = {
@@ -25,6 +26,7 @@ export type Cadastro = {
     email: string;
     senha: string;
     dataNascimento: string;
+    dataCriacao: string;
 }
 
 export interface AuthContextData {

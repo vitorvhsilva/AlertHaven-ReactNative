@@ -1,23 +1,88 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components/native';
 import theme from '../styles/theme';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/navigation';
+import { useAuth } from '../contexts/AuthContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Toast from 'react-native-toast-message';
+import { ActivityIndicator } from 'react-native';
 
 type UserScreenProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'User'>;
 };
 
 export const UserScreen: React.FC<UserScreenProps> = ({ navigation }) => {
-  const userData = {
-    photo: require('../../assets/icons/usuario.png'),
-    name: 'Vitor Silva',
-    email: 'vitor@email.com',
-    cpf: '123.456.789-00',
-    phone: '(11) 98765-4321',
-    birthDate: '15/05/1990',
-    accountCreated: '10/01/2023',
+  const [userData, setUserData] = useState<{
+    photo?: any;
+    name: string;
+    email: string;
+    cpf: string;
+    phone: string;
+    birthDate: string;
+    accountCreated: string;
+  } | null>(null);
+  const [loading, setLoading] = useState(true);
+  const { signOut } = useAuth();
+
+  useEffect(() => {
+    const loadUserData = async () => {
+      try {
+        const storedUser = await AsyncStorage.getItem('@AlertHaven:user');
+        if (storedUser) {
+          const user = JSON.parse(storedUser);
+          setUserData({
+            photo: require('../../assets/icons/usuario.png'),
+            name: user.nome || 'Nome não informado',
+            email: user.email || 'Email não informado',
+            cpf: user.cpf || 'CPF não informado',
+            phone: user.telefone || 'Telefone não informado',
+            birthDate: user.dataNascimento || 'Data não informada',
+            accountCreated: new Date().toLocaleDateString('pt-BR') 
+          });
+        }
+      } catch (error) {
+        Toast.show({
+          type: 'error',
+          text1: 'Erro',
+          text2: 'Não foi possível carregar os dados do usuário',
+          position: 'bottom',
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadUserData();
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      await signOut();
+      navigation.replace('Auth'); 
+      Toast.show({
+        type: 'success',
+        text1: 'Sucesso',
+        text2: 'Logout realizado com sucesso!',
+        position: 'bottom',
+      });
+    } catch (error) {
+      Toast.show({
+        type: 'error',
+        text1: 'Erro',
+        text2: 'Não foi possível fazer logout',
+        position: 'bottom',
+      });
+    }
   };
+
+  if (loading || !userData) {
+    return (
+      <Container>
+        <ActivityIndicator size="large" color={theme.colors.roxo1} />
+      </Container>
+    );
+  }
 
   return (
     <Container>
@@ -32,7 +97,7 @@ export const UserScreen: React.FC<UserScreenProps> = ({ navigation }) => {
       <ProfileContainer>
         <ProfilePhotoContainer>
           <ProfilePhoto source={userData.photo} />
-          <EditPhotoButton>
+          <EditPhotoButton onPress={() => navigation.navigate('EditUser')}>
             <EditIcon source={require('../../assets/icons/editar.png')} />
           </EditPhotoButton>
         </ProfilePhotoContainer>
@@ -73,11 +138,12 @@ export const UserScreen: React.FC<UserScreenProps> = ({ navigation }) => {
           <EditButton onPress={() => navigation.navigate('EditUser')}>
             <ButtonText>Editar Perfil</ButtonText>
           </EditButton>
-          <LogoutButton onPress={() => navigation.navigate('Auth')}>
+          <LogoutButton onPress={handleLogout}>
             <ButtonText>Sair</ButtonText>
           </LogoutButton>
         </ButtonContainer>
       </ProfileContainer>
+      <Toast />
     </Container>
   );
 };

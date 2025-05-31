@@ -25,9 +25,7 @@ export const AppRoutes: React.FC = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName={//user ? 'Home' : 
-        'Register'
-          }
+        initialRouteName={user ? 'Home' : 'Auth'}
         screenOptions={{
           headerShown: false,
           animation: 'fade',
@@ -36,20 +34,18 @@ export const AppRoutes: React.FC = () => {
         {!user ? (
           <>
             <Stack.Screen name="Auth" component={AuthScreen} />
+            <Stack.Screen name="Login" component={LoginScreen} />
+            <Stack.Screen name="Register" component={RegisterScreen} />
+          </>
+          ) : (
+            <>
             <Stack.Screen name="Home" component={HomeScreen} />
             <Stack.Screen name="Alerts" component={AlertsScreen} />
             <Stack.Screen name="Info" component={InfoScreen} />
             <Stack.Screen name="User" component={UserScreen} />
             <Stack.Screen name="EditUser" component={EditUserScreen} />
             <Stack.Screen name="EditPassword" component={EditPasswordScreen} />
-            <Stack.Screen name="Login" component={LoginScreen} />
-            <Stack.Screen name="Register" component={RegisterScreen} />
           </>
-          ) : (
-          <>
-
-          </>
-
         )}
       </Stack.Navigator>
     </NavigationContainer>
