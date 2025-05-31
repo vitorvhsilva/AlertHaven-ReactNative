@@ -13,7 +13,7 @@ type UserScreenProps = {
 };
 
 export const UserScreen: React.FC<UserScreenProps> = ({ navigation }) => {
-  const [userData, setUserData] = useState<{
+  const [userData, setuserData] = useState<{
     photo?: any;
     name: string;
     email: string;
@@ -22,38 +22,18 @@ export const UserScreen: React.FC<UserScreenProps> = ({ navigation }) => {
     birthDate: string;
     accountCreated: string;
   } | null>(null);
-  const [loading, setLoading] = useState(true);
-  const { signOut } = useAuth();
+  const { user, signOut } = useAuth();
 
   useEffect(() => {
-    const loadUserData = async () => {
-      try {
-        const storedUser = await AsyncStorage.getItem('@AlertHaven:user');
-        if (storedUser) {
-          const user = JSON.parse(storedUser);
-          setUserData({
-            photo: require('../../assets/icons/usuario.png'),
-            name: user.nome || 'Nome não informado',
-            email: user.email || 'Email não informado',
-            cpf: user.cpf || 'CPF não informado',
-            phone: user.telefone || 'Telefone não informado',
-            birthDate: user.dataNascimento || 'Data não informada',
-            accountCreated: new Date().toLocaleDateString('pt-BR') 
-          });
-        }
-      } catch (error) {
-        Toast.show({
-          type: 'error',
-          text1: 'Erro',
-          text2: 'Não foi possível carregar os dados do usuário',
-          position: 'bottom',
-        });
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadUserData();
+    setuserData({
+      photo: require('../../assets/icons/usuario.png'),
+      name: user?.nome || 'Nome não informado',
+      email: user?.email || 'Email não informado',
+      cpf: user?.cpf || 'CPF não informado',
+      phone: user?.telefone || 'Telefone não informado',
+      birthDate: user?.dataNascimento || 'Data não informada',
+      accountCreated: user?.dataCriacao || 'Data não informada'
+    });
   }, []);
 
   const handleLogout = async () => {
@@ -76,14 +56,6 @@ export const UserScreen: React.FC<UserScreenProps> = ({ navigation }) => {
     }
   };
 
-  if (loading || !userData) {
-    return (
-      <Container>
-        <ActivityIndicator size="large" color={theme.colors.roxo1} />
-      </Container>
-    );
-  }
-
   return (
     <Container>
       <Header>
@@ -96,7 +68,7 @@ export const UserScreen: React.FC<UserScreenProps> = ({ navigation }) => {
 
       <ProfileContainer>
         <ProfilePhotoContainer>
-          <ProfilePhoto source={userData.photo} />
+          <ProfilePhoto source={userData?.photo} />
           <EditPhotoButton onPress={() => navigation.navigate('EditUser')}>
             <EditIcon source={require('../../assets/icons/editar.png')} />
           </EditPhotoButton>
@@ -105,32 +77,32 @@ export const UserScreen: React.FC<UserScreenProps> = ({ navigation }) => {
         <UserInfoContainer>
           <InfoItem>
             <InfoLabel>Nome completo</InfoLabel>
-            <InfoValue>{userData.name}</InfoValue>
+            <InfoValue>{userData?.name}</InfoValue>
           </InfoItem>
 
           <InfoItem>
             <InfoLabel>E-mail</InfoLabel>
-            <InfoValue>{userData.email}</InfoValue>
+            <InfoValue>{userData?.email}</InfoValue>
           </InfoItem>
 
           <InfoItem>
             <InfoLabel>CPF</InfoLabel>
-            <InfoValue>{userData.cpf}</InfoValue>
+            <InfoValue>{userData?.cpf}</InfoValue>
           </InfoItem>
 
           <InfoItem>
             <InfoLabel>Telefone</InfoLabel>
-            <InfoValue>{userData.phone}</InfoValue>
+            <InfoValue>{userData?.phone}</InfoValue>
           </InfoItem>
 
           <InfoItem>
             <InfoLabel>Data de nascimento</InfoLabel>
-            <InfoValue>{userData.birthDate}</InfoValue>
+            <InfoValue>{userData?.birthDate}</InfoValue>
           </InfoItem>
 
           <InfoItem>
             <InfoLabel>Conta criada em</InfoLabel>
-            <InfoValue>{userData.accountCreated}</InfoValue>
+            <InfoValue>{userData?.accountCreated}</InfoValue>
           </InfoItem>
         </UserInfoContainer>
 

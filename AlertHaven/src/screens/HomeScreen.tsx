@@ -4,6 +4,7 @@ import theme from '../styles/theme';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/navigation';
 import WebMap, { MarkerType } from '../components/WebMap';
+import { useAuth } from '../contexts/AuthContext';
 
 type HomeScreenProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Home'>;
@@ -15,6 +16,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
   const [activeFilters, setActiveFilters] = useState<FilterType[]>(['TODOS']);
   const [mapKey, setMapKey] = useState(Date.now());
+
+  const { user } = useAuth();
 
   useEffect(() => {
     setUserLocation([-23.5615, -46.6560]);
@@ -143,6 +146,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
     }))
   ];
 
+  const splitedName: string[] | undefined = user?.nome.split(" ")
+
   return (
     <Container>
       <Header>
@@ -159,7 +164,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         </HeaderRightContainer>
       </Header>
       <HomeTextContainer>
-        <HomeTitleText>Seja bem vindo, Vitor</HomeTitleText>
+        <HomeTitleText>Seja bem vindo, {splitedName && splitedName[0]}</HomeTitleText>
         <HomeSubtitleText>Eventos climáticos em tempo real</HomeSubtitleText>
       </HomeTextContainer>
       <FilterContainer>
