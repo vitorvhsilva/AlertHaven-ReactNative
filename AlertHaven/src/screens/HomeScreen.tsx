@@ -14,10 +14,20 @@ type FilterType = MarkerType | 'TODOS';
 export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
   const [activeFilters, setActiveFilters] = useState<FilterType[]>(['TODOS']);
+  const [mapKey, setMapKey] = useState(Date.now());
 
   useEffect(() => {
     setUserLocation([-23.5615, -46.6560]);
   }, []);
+
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      setMapKey(Date.now());
+      console.log('Resetting map key');
+    });
+    return unsubscribe;
+  }, [navigation]);
 
   const toggleFilter = (filter: FilterType) => {
     if (filter === 'TODOS') {
@@ -139,9 +149,14 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         <UserContainer>
           <UserImage source={require('../../assets/icons/usuario.png')}/>
         </UserContainer>
-        <InfoContainer>
-          <InfoImage source={require('../../assets/icons/info.png')}/>
-        </InfoContainer>
+        <HeaderRightContainer>
+          <AlertContainer onPress={() => navigation.navigate("Alerts")}>
+            <AlertImage source={require('../../assets/icons/alerta.png')}/>
+          </AlertContainer>
+          <InfoContainer>
+            <InfoImage source={require('../../assets/icons/info.png')}/>
+          </InfoContainer>
+        </HeaderRightContainer>
       </Header>
       <HomeTextContainer>
         <HomeTitleText>Seja bem vindo, Vitor</HomeTitleText>
@@ -200,8 +215,9 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
           </Filter>
         </FiltersContainer>
       </FilterContainer>
-      <MapContainer>
+      <MapContainer key={mapKey}>
         <WebMap 
+          key={`map-${mapKey}`}
           center={[-23.5615, -46.6560]} 
           zoom={13}
           circles={filteredCircles}
@@ -249,6 +265,24 @@ const InfoImage = styled.Image`
   height: 40px;
 ` 
 
+const HeaderRightContainer = styled.TouchableOpacity`
+  width: fit-content;
+  height: fit-content;
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+`;
+
+const AlertContainer = styled.TouchableOpacity`
+  width: fit-content;
+  height: fit-content;
+`;
+
+const AlertImage = styled.Image`
+  width: 40px;
+  height: 40px;
+` 
+
 const MapContainer = styled.View`
   background-color: ${theme.colors.preto};
   padding: 10px 30px;
@@ -278,7 +312,7 @@ const FilterContainer = styled.View`
   padding: 0px 30px;
   width: 100%;
   height: fit-content;
-  margin: 10px 0px 0px;
+  margin: 30px 0px 0px;
 `;
 
 const FiltersContainer = styled.ScrollView`

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import L, { LatLngExpression } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
@@ -50,14 +50,70 @@ const WebMap: React.FC<WebMapProps> = ({
   markers = [],
   userLocation = null
 }) => {
+  const mapRef = useRef<L.Map | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const layersRef = useRef<L.LayerGroup | null>(null);
+  const initializedRef = useRef(false);
+
   useEffect(() => {
-    const map = L.map('map').setView(center, zoom);
+    if (!initializedRef.current && containerRef.current) {
+      const container = containerRef.current;
+      
+      if (container._leaflet_map) {
+        try {
+          container._leaflet_map.remove();
+        } catch (e) {
+          console.warn('Failed to clean up existing map:', e);
+        }
+      }
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(map);
+      const map = L.map(container, {
+        preferCanvas: true,
+        zoomControl: false,
+        renderer: L.canvas()
+      }).setView(center, zoom);
 
-    // Corrige o problema do ícone padrão do Leaflet
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+      }).addTo(map);
+
+      layersRef.current = L.layerGroup().addTo(map);
+      mapRef.current = map;
+      initializedRef.current = true;
+
+      console.log('Map initialized');
+    }
+
+    if (mapRef.current) {
+      mapRef.current.setView(center, zoom);
+    }
+
+    return () => {
+      console.log('Cleaning up map');
+      if (mapRef.current) {
+        try {
+          mapRef.current.remove();
+          console.log('Map removed successfully');
+        } catch (e) {
+          console.warn('Error removing map:', e);
+        } finally {
+          mapRef.current = null;
+          initializedRef.current = false;
+        }
+      }
+      if (layersRef.current) {
+        layersRef.current.clearLayers();
+        layersRef.current = null;
+      }
+    };
+  }, [center, zoom]);
+
+  useEffect(() => {
+    if (!mapRef.current || !layersRef.current) return;
+
+    const layers = layersRef.current;
+    layers.clearLayers();
+
     const defaultIcon = L.icon({
       iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
       iconRetinaUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon-2x.png',
@@ -83,7 +139,7 @@ const WebMap: React.FC<WebMapProps> = ({
         icon: createCustomIcon(marker.type),
         zIndexOffset: marker.type === 'USUARIO' ? 1000 : 0
       })
-      .addTo(map)
+      .addTo(layers)
       .bindPopup(`
         <div style="text-align: center;">
           <strong>${marker.type.replace('_', ' ')}</strong><br/>
@@ -97,7 +153,7 @@ const WebMap: React.FC<WebMapProps> = ({
         icon: createCustomIcon('USUARIO'),
         zIndexOffset: 1000
       })
-      .addTo(map)
+      .addTo(layers)
       .bindPopup(`
         <div style="text-align: center;">
           <strong>SUA LOCALIZAÇÃO</strong><br/>
@@ -113,16 +169,28 @@ const WebMap: React.FC<WebMapProps> = ({
         fillColor: circle.fillColor || '#3388ff',
         fillOpacity: 0.2
       })
-      .addTo(map)
+      .addTo(layers)
       .bindPopup(circle.popupText || "");
     });
 
     return () => {
-      map.remove();
+      layers.clearLayers();
     };
-  }, [center, zoom, circles, markers, userLocation]);
+  }, [circles, markers, userLocation]);
 
-  return <div id="map" style={{ width: '100%', height: '60vh', borderRadius: '20px' }} />;
+  return (
+    <div 
+      id="map" 
+      ref={containerRef}
+      style={{ 
+        width: '100%', 
+        height: '60vh', 
+        borderRadius: '20px',
+        zIndex: 0,
+        position: 'relative'
+      }} 
+    />
+  );
 };
 
 export default WebMap;

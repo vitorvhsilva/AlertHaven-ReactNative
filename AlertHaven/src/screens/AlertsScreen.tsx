@@ -64,14 +64,10 @@ export const AlertsScreen: React.FC<AlertsScreenProps> = ({ navigation }) => {
     ABRIGO: require('../../assets/icons/abrigo.png')
   };
 
-  const handleBack = () => {
-    navigation.goBack();
-  };
-
   return (
     <Container>
       <Header>
-        <BackContainer onPress={handleBack}>
+        <BackContainer onPress={() => navigation.navigate("Home")}>
           <BackImage source={require('../../assets/icons/voltar.png')}/>
         </BackContainer>
       </Header>
