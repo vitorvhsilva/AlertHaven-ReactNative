@@ -135,10 +135,17 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
 
   return (
     <Container>
-      <Header></Header>
+      <Header>
+        <UserContainer>
+          <UserImage source={require('../../assets/icons/usuario.png')}/>
+        </UserContainer>
+        <InfoContainer>
+          <InfoImage source={require('../../assets/icons/info.png')}/>
+        </InfoContainer>
+      </Header>
       <HomeTextContainer>
         <HomeTitleText>Seja bem vindo, Vitor</HomeTitleText>
-        <HomeSubtitleText>Eventos climáticos em tempo real - São Paulo</HomeSubtitleText>
+        <HomeSubtitleText>Eventos climáticos em tempo real</HomeSubtitleText>
       </HomeTextContainer>
       <FilterContainer>
         <FilterTitleText>Filtrar por:</FilterTitleText>
@@ -146,8 +153,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
           horizontal={true}
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={{
-            alignItems: 'center',
-            gap: 10
+            alignItems: 'center'
           }}
         >
           <Filter 
@@ -214,15 +220,38 @@ const Container = styled.ScrollView`
 
 const Header = styled.View`
   display: flex;
+  flex-direction: row;
   background-color: ${theme.colors.preto};
-  border-bottom: 2px solid ${theme.colors.roxo1};
   width: 100%;
-  height: 10vh;
+  justify-content: space-between;
+  align-items: center;
+  height: fit-content;
+  padding: 15px 30px;
 `;
+
+const UserContainer = styled.TouchableOpacity`
+  width: fit-content;
+  height: fit-content;
+`;
+
+const UserImage = styled.Image`
+  width: 40px;
+  height: 40px;
+` 
+
+const InfoContainer = styled.TouchableOpacity`
+  width: fit-content;
+  height: fit-content;
+`;
+
+const InfoImage = styled.Image`
+  width: 40px;
+  height: 40px;
+` 
 
 const MapContainer = styled.View`
   background-color: ${theme.colors.preto};
-  padding: 30px;
+  padding: 10px 30px;
   border-radius: 20px;
   width: 100%;
 `;
@@ -249,7 +278,7 @@ const FilterContainer = styled.View`
   padding: 0px 30px;
   width: 100%;
   height: fit-content;
-  margin: 10px 0px;
+  margin: 10px 0px 0px;
 `;
 
 const FiltersContainer = styled.ScrollView`
