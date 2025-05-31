@@ -146,14 +146,14 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   return (
     <Container>
       <Header>
-        <UserContainer>
+        <UserContainer onPress={() => navigation.navigate("User")}>
           <UserImage source={require('../../assets/icons/usuario.png')}/>
         </UserContainer>
         <HeaderRightContainer>
           <AlertContainer onPress={() => navigation.navigate("Alerts")}>
             <AlertImage source={require('../../assets/icons/alerta.png')}/>
           </AlertContainer>
-          <InfoContainer>
+          <InfoContainer onPress={() => navigation.navigate("Info")}>
             <InfoImage source={require('../../assets/icons/info.png')}/>
           </InfoContainer>
         </HeaderRightContainer>

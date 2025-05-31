@@ -7,6 +7,9 @@ import { AuthScreen }  from '../screens/AuthScreen';
 import { HomeScreen } from '../screens/HomeScreen';
 import { AlertsScreen } from '../screens/AlertsScreen';
 import { InfoScreen } from '../screens/InfoScreen';
+import { UserScreen } from '../screens/UserScreen';
+import { EditUserScreen } from '../screens/EditProfileScreen';
+import { EditPasswordScreen } from '../screens/EditPasswordScreen';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -21,7 +24,7 @@ export const AppRoutes: React.FC = () => {
     <NavigationContainer>
       <Stack.Navigator
         initialRouteName={//user ? 'Home' : 
-        'Info'
+        'EditPassword'
           }
         screenOptions={{
           headerShown: false,
@@ -34,6 +37,9 @@ export const AppRoutes: React.FC = () => {
             <Stack.Screen name="Home" component={HomeScreen} />
             <Stack.Screen name="Alerts" component={AlertsScreen} />
             <Stack.Screen name="Info" component={InfoScreen} />
+            <Stack.Screen name="User" component={UserScreen} />
+            <Stack.Screen name="EditUser" component={EditUserScreen} />
+            <Stack.Screen name="EditPassword" component={EditPasswordScreen} />
           </>
           /*
           <>
