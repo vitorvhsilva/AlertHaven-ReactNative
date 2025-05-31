@@ -5,8 +5,7 @@ export type Usuario = {
     telefone: string;
     email: string;
     senha: string;
-    dataNascimento: Date;
-    cep: string;
+    dataNascimento: string;
 }
 
 export type AuthResponse = {
@@ -25,8 +24,7 @@ export type Cadastro = {
     telefone: string;
     email: string;
     senha: string;
-    dataNascimento: Date;
-    cep: string;
+    dataNascimento: string;
 }
 
 export interface AuthContextData {

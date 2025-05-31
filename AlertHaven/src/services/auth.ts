@@ -50,8 +50,7 @@ export const authService = {
       telefone: data.telefone,
       email: data.email,
       senha: data.senha,
-      dataNascimento: data.dataNascimento,
-      cep: data.cep
+      dataNascimento: data.dataNascimento
     };
 
     console.log('Novo usuário adicionado:', novoUsuario); 

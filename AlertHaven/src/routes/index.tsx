@@ -24,7 +24,7 @@ export const AppRoutes: React.FC = () => {
     <NavigationContainer>
       <Stack.Navigator
         initialRouteName={//user ? 'Home' : 
-        'EditPassword'
+        'Auth'
           }
         screenOptions={{
           headerShown: false,
@@ -40,29 +40,14 @@ export const AppRoutes: React.FC = () => {
             <Stack.Screen name="User" component={UserScreen} />
             <Stack.Screen name="EditUser" component={EditUserScreen} />
             <Stack.Screen name="EditPassword" component={EditPasswordScreen} />
+            <Stack.Screen name="Login" component={EditPasswordScreen} />
+            <Stack.Screen name="Register" component={EditPasswordScreen} />
           </>
-          /*
-          <>
-            <Stack.Screen name="Auth" component={AuthScreen} />
-            <Stack.Screen name="SignUp" component={SignUpScreen} />
-            <Stack.Screen name="Login" component={LoginScreen} />
-          </>
-          */ 
           ) : (
           <>
+
           </>
-          /*
-          <>
-            <Stack.Screen name="Home" component={HomeScreen} />
-            <Stack.Screen name="AddMotorcycle" component={AddMotorcycle} />
-            <Stack.Screen name="ViewMotorcycle" component={ViewMotorcycleScreen} />
-            <Stack.Screen name="Notifications" component={NotificationScreen} />
-            <Stack.Screen name="UserConfig" component={UserConfig} />
-            <Stack.Screen name="SeeCourtyard" component={SeeCourtyardScreen} /> 
-            <Stack.Screen name="ProfilePicture" component={ProfilePictureScreen} /> 
-            <Stack.Screen name="ChangeNameOrPassword" component={ChangeNameOrPasswordScreen} /> 
-          </>
-          */
+
         )}
       </Stack.Navigator>
     </NavigationContainer>

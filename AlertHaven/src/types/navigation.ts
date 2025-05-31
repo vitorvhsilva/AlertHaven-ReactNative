@@ -6,4 +6,6 @@ export type RootStackParamList = {
   User: undefined;
   EditUser: undefined;
   EditPassword: undefined;
+  Login: undefined;
+  Register: undefined;
 };
