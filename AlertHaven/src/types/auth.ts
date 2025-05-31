@@ -35,4 +35,6 @@ export interface AuthContextData {
   signIn: (credentials: Login) => Promise<void>;
   register: (data: Cadastro) => Promise<void>;
   signOut: () => Promise<void>;
+  updateUser: (updatedUser: Partial<Usuario>) => Promise<void>;
+  updatePassword: (currentPassword: string, newPassword: string) => Promise<void>;
 }

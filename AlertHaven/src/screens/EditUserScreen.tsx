@@ -5,20 +5,58 @@ import styled from 'styled-components/native';
 import theme from '../styles/theme';
 import { TextInput } from 'react-native';
 import Toast from 'react-native-toast-message';
+import { useAuth } from '../contexts/AuthContext';
 
 type EditUserScreenProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'EditUser'>;
 };
 
 export const EditUserScreen: React.FC<EditUserScreenProps> = ({ navigation }) => {
+  const { user, updateUser } = useAuth();
   const [userData, setUserData] = useState({
-    photo: require('../../assets/icons/usuario.png'),
-    name: 'Vitor Silva',
-    email: 'vitor@email.com',
-    cpf: '123.456.789-00',
-    phone: '(11) 98765-4321',
-    birthDate: '15/05/1990',
+    name: user?.nome || '',
+    email: user?.email || '',
+    cpf: user?.cpf || '',
+    phone: user?.telefone || '',
+    birthDate: user?.dataNascimento || '',
   });
+  const [loading, setLoading] = useState(false);
+
+  const handleSave = async () => {
+    if (!validateFields()) {
+      return;
+    }
+
+    try {
+      setLoading(true);
+      await updateUser({
+        nome: userData.name,
+        email: userData.email,
+        cpf: userData.cpf,
+        telefone: userData.phone,
+        dataNascimento: userData.birthDate
+      });
+      
+      Toast.show({
+        type: 'success',
+        text1: 'Sucesso',
+        text2: 'Dados atualizados com sucesso!',
+        position: 'bottom',
+      });
+      
+      navigation.navigate('User');
+    } catch (error) {
+      Toast.show({
+        type: 'error',
+        text1: 'Erro',
+        text2: 'Não foi possível atualizar os dados',
+        position: 'bottom',
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
 
   const validateFields = () => {
     if (!userData.name.trim()) {
@@ -76,21 +114,6 @@ export const EditUserScreen: React.FC<EditUserScreenProps> = ({ navigation }) =>
     }
 
     return true;
-  };
-
-  const handleSave = () => {
-    if (!validateFields()) {
-      return;
-    }
-
-    Toast.show({
-      type: 'success',
-      text1: 'Sucesso',
-      text2: 'Dados atualizados com sucesso!',
-      position: 'bottom',
-    });
-    
-    navigation.navigate('User');
   };
 
   const formatCPF = (text: string) => {
@@ -152,7 +175,7 @@ export const EditUserScreen: React.FC<EditUserScreenProps> = ({ navigation }) =>
 
       <ProfileContainer>
         <ProfilePhotoContainer>
-          <ProfilePhoto source={userData.photo} />
+          <ProfilePhoto source={require('../../assets/icons/usuario.png')} />
           <EditPhotoButton>
             <EditIcon source={require('../../assets/icons/editar.png')} />
           </EditPhotoButton>
@@ -245,23 +268,24 @@ const BackContainer = styled.TouchableOpacity`
 const BackImage = styled.Image`
   width: 100%;
   height: 100%;
-  tint-color: ${theme.colors.roxo1};
 `;
 
 const HeaderTitle = styled.Text`
   color: ${theme.colors.roxo1};
   font-family: ${theme.fonts.bold};
-  font-size: 20px;
+  font-size: ${theme.typography.title.fontSize};
 `;
 
 const SaveButton = styled.TouchableOpacity`
   padding: 8px 16px;
+  background-color: ${theme.colors.roxo1};
+  border-radius: 10px;
 `;
 
 const SaveText = styled.Text`
-  color: ${theme.colors.roxo1};
+  color: ${theme.colors.branco};
   font-family: ${theme.fonts.bold};
-  font-size: 16px;
+  font-size: ${theme.typography.subtitle.fontSize};
 `;
 
 const ProfileContainer = styled.ScrollView`
@@ -312,14 +336,14 @@ const InfoItem = styled.View`
 const InfoLabel = styled.Text`
   color: ${theme.colors.roxo1};
   font-family: ${theme.fonts.regular};
-  font-size: 14px;
+  font-size: ${theme.typography.body.fontSize};;
   margin-bottom: 5px;
 `;
 
 const StyledInput = styled(TextInput)`
   color: ${theme.colors.branco};
   font-family: ${theme.fonts.bold};
-  font-size: 16px;
+  font-size: ${theme.typography.subtitle.fontSize};;
   padding: 12px;
   background-color: ${theme.colors.roxo2};
   border-radius: 8px;
@@ -338,5 +362,5 @@ const PasswordChangeButton = styled.TouchableOpacity`
 const PasswordChangeText = styled.Text`
   color: ${theme.colors.branco};
   font-family: ${theme.fonts.bold};
-  font-size: 16px;
+  font-size: ${theme.typography.subtitle.fontSize};;
 `;

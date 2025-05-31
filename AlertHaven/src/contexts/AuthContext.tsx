@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { authService } from '../services/auth';
 import { Usuario, Login, Cadastro, AuthContextData } from '../types/auth';
+import Toast from 'react-native-toast-message';
 
 const STORAGE_KEYS = {
   USER: '@AlertHaven:user',
@@ -73,8 +74,61 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const updateUser = async (updatedUser: Partial<Usuario>) => {
+    try {
+      if (!user) throw new Error('Nenhum usuário logado');
+      
+      const mergedUser = { ...user, ...updatedUser };
+      await authService.updateUser(mergedUser);
+      setUser(mergedUser);
+      
+      Toast.show({
+        type: 'success',
+        text1: 'Sucesso',
+        text2: 'Perfil atualizado com sucesso!',
+        position: 'bottom',
+      });
+    } catch (error) {
+      Toast.show({
+        type: 'error',
+        text1: 'Erro',
+        text2: error instanceof Error ? error.message : 'Erro ao atualizar perfil',
+        position: 'bottom',
+      });
+      throw error;
+    }
+  };
+
+  const updatePassword = async (currentPassword: string, newPassword: string) => {
+    try {
+      if (!user) throw new Error('Nenhum usuário logado');
+      
+      if (user.senha !== currentPassword) {
+        throw new Error('Senha atual incorreta');
+      }
+      
+      await authService.updatePassword(user.id, newPassword);
+      setUser({ ...user, senha: newPassword });
+      
+      Toast.show({
+        type: 'success',
+        text1: 'Sucesso',
+        text2: 'Senha alterada com sucesso!',
+        position: 'bottom',
+      });
+    } catch (error) {
+      Toast.show({
+        type: 'error',
+        text1: 'Erro',
+        text2: error instanceof Error ? error.message : 'Erro ao alterar senha',
+        position: 'bottom',
+      });
+      throw error;
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, loading, signIn, register, signOut }}>
+    <AuthContext.Provider value={{ user, loading, signIn, register, signOut, updateUser, updatePassword }}>
       {children}
     </AuthContext.Provider>
   );

@@ -84,4 +84,46 @@ export const authService = {
       return null;
     }
   },
+
+  async updateUser(updatedUser: Usuario): Promise<void> {
+    try {
+      await AsyncStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(updatedUser));
+      
+      const usersJson = await AsyncStorage.getItem(STORAGE_KEYS.REGISTERED_USERS);
+      if (usersJson) {
+        const users: Usuario[] = JSON.parse(usersJson);
+        const updatedUsers = users.map(user => 
+          user.id === updatedUser.id ? updatedUser : user
+        );
+        await AsyncStorage.setItem(STORAGE_KEYS.REGISTERED_USERS, JSON.stringify(updatedUsers));
+      }
+    } catch (error) {
+      console.error('Erro ao atualizar usuário:', error);
+      throw error;
+    }
+  },
+
+  async updatePassword(userId: string, newPassword: string): Promise<void> {
+    try {
+      const usersJson = await AsyncStorage.getItem(STORAGE_KEYS.REGISTERED_USERS);
+      if (usersJson) {
+        const users: Usuario[] = JSON.parse(usersJson);
+        const updatedUsers = users.map(user => 
+          user.id === userId ? { ...user, senha: newPassword } : user
+        );
+        await AsyncStorage.setItem(STORAGE_KEYS.REGISTERED_USERS, JSON.stringify(updatedUsers));
+        
+        const currentUser = await this.getStoredUser();
+        if (currentUser && currentUser.id === userId) {
+          await AsyncStorage.setItem(STORAGE_KEYS.USER, JSON.stringify({
+            ...currentUser,
+            senha: newPassword
+          }));
+        }
+      }
+    } catch (error) {
+      console.error('Erro ao atualizar senha:', error);
+      throw error;
+    }
+  }
 }; 

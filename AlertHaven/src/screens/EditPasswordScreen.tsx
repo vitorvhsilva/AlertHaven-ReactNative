@@ -5,18 +5,20 @@ import styled from 'styled-components/native';
 import theme from '../styles/theme';
 import { TextInput } from 'react-native';
 import Toast from 'react-native-toast-message';
+import { useAuth } from '../contexts/AuthContext';
 
 type EditPasswordScreenProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'EditPassword'>;
 };
 
 export const EditPasswordScreen: React.FC<EditPasswordScreenProps> = ({ navigation }) => {
-  const [currentPassword, setCurrentPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+    const { updatePassword } = useAuth();
+    const [currentPassword, setCurrentPassword] = useState('');
+    const [newPassword, setNewPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
-  const handleChangePassword = () => {
+  const handleChangePassword = async () => {
     if (!currentPassword || !newPassword || !confirmPassword) {
       Toast.show({
         type: 'error',
@@ -47,18 +49,28 @@ export const EditPasswordScreen: React.FC<EditPasswordScreenProps> = ({ navigati
       return;
     }
 
-    setIsLoading(true);
-
-    setTimeout(() => {
-      setIsLoading(false);
+    try {
+      setIsLoading(true);
+      await updatePassword(currentPassword, newPassword);
+      
       Toast.show({
         type: 'success',
         text1: 'Sucesso',
         text2: 'Senha alterada com sucesso!',
         position: 'bottom',
       });
+      
       navigation.navigate('User');
-    }, 1500);
+    } catch (error) {
+      Toast.show({
+        type: 'error',
+        text1: 'Erro',
+        text2: error instanceof Error ? error.message : 'Erro ao alterar senha',
+        position: 'bottom',
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -152,7 +164,7 @@ const BackImage = styled.Image`
 const HeaderTitle = styled.Text`
   color: ${theme.colors.roxo1};
   font-family: ${theme.fonts.bold};
-  font-size: 20px;
+  font-size: ${theme.typography.title.fontSize};
 `;
 
 const EmptyView = styled.View`
@@ -175,14 +187,14 @@ const InfoItem = styled.View`
 const InfoLabel = styled.Text`
   color: ${theme.colors.roxo1};
   font-family: ${theme.fonts.regular};
-  font-size: 14px;
+  font-size: ${theme.typography.body.fontSize};
   margin-bottom: 8px;
 `;
 
 const PasswordInput = styled(TextInput)`
   color: ${theme.colors.branco};
   font-family: ${theme.fonts.regular};
-  font-size: 16px;
+  font-size: ${theme.typography.subtitle.fontSize};
   padding: 15px;
   background-color: ${theme.colors.roxo2};
   border-radius: 10px;
@@ -200,7 +212,7 @@ const PasswordRequirements = styled.View`
 const RequirementText = styled.Text`
   color: ${theme.colors.cinza};
   font-family: ${theme.fonts.regular};
-  font-size: 14px;
+  font-size: ${theme.typography.subtitle.fontSize};
   margin-bottom: 5px;
 `;
 
@@ -216,5 +228,5 @@ const SaveButton = styled.TouchableOpacity`
 const ButtonText = styled.Text`
   color: ${theme.colors.branco};
   font-family: ${theme.fonts.bold};
-  font-size: 16px;
+  font-size: ${theme.typography.subtitle.fontSize};
 `;
