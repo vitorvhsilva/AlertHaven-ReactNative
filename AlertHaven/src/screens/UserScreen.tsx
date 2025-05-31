@@ -22,7 +22,7 @@ export const UserScreen: React.FC<UserScreenProps> = ({ navigation }) => {
   return (
     <Container>
       <Header>
-        <BackContainer onPress={() => navigation.goBack()}>
+        <BackContainer onPress={() => navigation.navigate('Home')}>
           <BackImage source={require('../../assets/icons/voltar.png')} />
         </BackContainer>
         <HeaderTitle>Meu Perfil</HeaderTitle>

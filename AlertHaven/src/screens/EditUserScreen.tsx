@@ -21,7 +21,7 @@ export const EditUserScreen: React.FC<EditUserScreenProps> = ({ navigation}) => 
 
   const handleSave = () => {
     console.log('Dados salvos:', userData);
-    navigation.goBack();
+    navigation.navigate('User');
   };
 
   return (
@@ -93,7 +93,7 @@ export const EditUserScreen: React.FC<EditUserScreenProps> = ({ navigation}) => 
             />
           </InfoItem>
 
-          <PasswordChangeButton onPress={() => navigation.navigate('Auth')}>
+          <PasswordChangeButton onPress={() => navigation.navigate('EditPassword')}>
             <PasswordChangeText>Alterar Senha</PasswordChangeText>
           </PasswordChangeButton>
         </UserInfoContainer>

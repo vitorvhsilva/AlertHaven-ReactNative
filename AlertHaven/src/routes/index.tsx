@@ -8,7 +8,7 @@ import { HomeScreen } from '../screens/HomeScreen';
 import { AlertsScreen } from '../screens/AlertsScreen';
 import { InfoScreen } from '../screens/InfoScreen';
 import { UserScreen } from '../screens/UserScreen';
-import { EditUserScreen } from '../screens/EditProfileScreen';
+import { EditUserScreen } from '../screens/EditUserScreen';
 import { EditPasswordScreen } from '../screens/EditPasswordScreen';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
