@@ -7,10 +7,10 @@ type AuthScreenProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Auth'>;
 };
 
-const AuthScreen: React.FC<AuthScreenProps> = ({ navigation }) => {
+export const AuthScreen: React.FC<AuthScreenProps> = ({ navigation }) => {
   return (
     <Container>
-
+        
     </Container>
   );
 };
@@ -19,5 +19,3 @@ const Container = styled.ScrollView`
   flex: 1;
   background-color: ${theme.colors.preto};
 `;
-
-export default AuthScreen;

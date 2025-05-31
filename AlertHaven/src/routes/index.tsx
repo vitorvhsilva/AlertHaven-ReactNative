@@ -3,9 +3,10 @@ import { useAuth } from '../contexts/AuthContext';
 import { NavigationContainer } from '@react-navigation/native';
 import { RootStackParamList } from '../types/navigation';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import AuthScreen from '../screens/AuthScreen';
+import { AuthScreen }  from '../screens/AuthScreen';
 import { HomeScreen } from '../screens/HomeScreen';
 import { AlertsScreen } from '../screens/AlertsScreen';
+import { InfoScreen } from '../screens/InfoScreen';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -20,7 +21,7 @@ export const AppRoutes: React.FC = () => {
     <NavigationContainer>
       <Stack.Navigator
         initialRouteName={//user ? 'Home' : 
-        'Alerts'
+        'Info'
           }
         screenOptions={{
           headerShown: false,
@@ -32,6 +33,7 @@ export const AppRoutes: React.FC = () => {
             <Stack.Screen name="Auth" component={AuthScreen} />
             <Stack.Screen name="Home" component={HomeScreen} />
             <Stack.Screen name="Alerts" component={AlertsScreen} />
+            <Stack.Screen name="Info" component={InfoScreen} />
           </>
           /*
           <>
